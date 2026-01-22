@@ -12,9 +12,9 @@ let shuffledQuizzes=[], currentQuiz=0, score=0;
 let selectedChoice=null, answered=false;
 
 const titleScreen=document.getElementById("titleScreen");
+const charScreen=document.getElementById("charScreen"); // キャラクター画面
 const quizScreen=document.getElementById("quizScreen");
 const resultScreen=document.getElementById("resultScreen");
-const modal=document.getElementById("modal");
 
 const progress=document.getElementById("progress");
 const question=document.getElementById("question");
@@ -34,9 +34,9 @@ const seVolume=document.getElementById("seVolume");
 /* 初期化 */
 function init(){
   titleScreen.style.display="flex";
+  if(charScreen) charScreen.style.display="none";
   quizScreen.style.display="none";
   resultScreen.style.display="none";
-  modal.style.display="none";
   confirmBtn.style.display="none";
   nextBtn.style.display="none";
   bgmQuiz.volume=bgmVolume.value;
@@ -46,13 +46,13 @@ function init(){
 }
 init();
 
+/* 音量スライダー連動 */
 bgmVolume.addEventListener("input", ()=>{ bgmQuiz.volume=bgmVolume.value; bgmResult.volume=bgmVolume.value; });
 seVolume.addEventListener("input", ()=>{ seCorrect.volume=seVolume.value; seWrong.volume=seVolume.value; });
 
 function shuffle(array){ return array.sort(()=>Math.random()-0.5); }
 
 function resetUI(){
-  modal.style.display="none";
   confirmBtn.style.display="none";
   nextBtn.style.display="none";
   resultText.textContent="";
@@ -61,6 +61,7 @@ function resetUI(){
   for(let i=0;i<3;i++){ document.getElementById(`btn${i}`).className=""; }
 }
 
+/* ゲーム開始 */
 function startGame(){
   resetUI();
   bgmResult.pause(); bgmResult.currentTime=0;
@@ -68,34 +69,55 @@ function startGame(){
   shuffledQuizzes=shuffle([...quizzes]);
   currentQuiz=0; score=0;
   titleScreen.classList.add("fade-out");
+
   setTimeout(()=>{
     titleScreen.style.display="none";
-    quizScreen.style.display="block";
-    quizScreen.classList.add("fade-in");
-    showQuiz();
+
+    // キャラクター画面を2秒表示
+    if(charScreen){
+      charScreen.style.display="flex";
+      setTimeout(()=>{
+        charScreen.style.display="none";
+        quizScreen.style.display="block";
+        quizScreen.classList.add("fade-in");
+        showQuiz();
+      },2000);
+    } else {
+      quizScreen.style.display="block";
+      quizScreen.classList.add("fade-in");
+      showQuiz();
+    }
   },800);
 }
 
+/* 問題表示 */
 function showQuiz(){
   resetUI();
   const quiz=shuffledQuizzes[currentQuiz];
   const labels=["A","B","C"];
   progress.textContent=`問題 ${currentQuiz+1} / ${shuffledQuizzes.length}`;
   question.textContent=quiz.question;
-  quiz.choices.forEach((choice,i)=>{ document.getElementById(`btn${i}`).textContent=`${labels[i]}. ${choice}`; });
+  quiz.choices.forEach((choice,i)=>{ 
+    const btn = document.getElementById(`btn${i}`);
+    btn.textContent=`${labels[i]}. ${choice}`;
+    btn.onclick = ()=> selectChoice(i);
+  });
 }
 
+/* 選択 */
 function selectChoice(choiceNumber){
   if(answered) return;
-  selectedChoice=choiceNumber;
+  selectedChoice = choiceNumber;
   for(let i=0;i<3;i++){ document.getElementById(`btn${i}`).classList.remove("selected"); }
   document.getElementById(`btn${choiceNumber}`).classList.add("selected");
-  confirmBtn.style.display="inline";
+  confirmBtn.style.display="inline"; // 確認ボタンを表示
 }
 
-function confirmAnswer(){ if(selectedChoice===null||answered) return; modal.style.display="flex"; }
-function confirmYes(){ modal.style.display="none"; judgeAnswer(); }
-function confirmNo(){ modal.style.display="none"; }
+/* 判定（確認ボタンで呼ぶ） */
+function confirmAnswer(){
+  if(selectedChoice===null || answered) return;
+  judgeAnswer();
+}
 
 function judgeAnswer(){
   answered=true;
@@ -110,14 +132,17 @@ function judgeAnswer(){
   } else {
     resultText.textContent="不正解…"; seWrong.currentTime=0; seWrong.play();
   }
-  confirmBtn.style.display="none"; nextBtn.style.display="inline";
+  confirmBtn.style.display="none"; 
+  nextBtn.style.display="inline"; // 判定後に次へ
 }
 
+/* 次へ */
 function nextQuiz(){
   currentQuiz++;
   if(currentQuiz<shuffledQuizzes.length){ showQuiz(); }else{ showResult(); }
 }
 
+/* 結果表示 */
 function showResult(){
   quizScreen.style.display="none";
   resultScreen.style.display="block";
@@ -130,8 +155,10 @@ function showResult(){
   document.getElementById("comment").textContent=comment;
 }
 
+/* リトライ */
 function retryQuiz(){
   bgmResult.pause(); bgmResult.currentTime=0;
   titleScreen.style.display="flex"; titleScreen.classList.remove("fade-out");
   quizScreen.style.display="none"; resultScreen.style.display="none";
+  resetUI();
 }

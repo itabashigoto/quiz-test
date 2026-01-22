@@ -3,63 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3択クイズゲーム</title>
+  <title>クイズ！SEISEN QUEST</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- タイトル画面 -->
+<!-- =====================
+  タイトル画面
+===================== -->
 <div id="titleScreen">
-  <div class="title-content">
-    <h1>3択クイズ</h1>
-    <button onclick="startGame()">スタート</button>
+  <img src="title.png" alt="クイズ！SEISEN QUEST" class="title-image">
+
+  <div class="title-ui">
+   <button class="start-btn" onclick="startGame()">スタート</button>
 
     <div class="volume-control">
-      <label>BGM
-        <input type="range" id="bgmVolume" min="0" max="1" step="0.01" value="0.5">
-      </label>
-      <label>SE
-        <input type="range" id="seVolume" min="0" max="1" step="0.01" value="0.7">
-      </label>
+  <label>
+    <span>BGM</span>
+    <input type="range" id="bgmVolume" min="0" max="1" step="0.01">
+  </label>
+
+  <label>
+    <span>SE</span>
+    <input type="range" id="seVolume" min="0" max="1" step="0.01">
+  </label>
+</div>
+
     </div>
   </div>
 </div>
 
-<!-- クイズ画面 -->
+<!-- =====================
+  クイズ画面
+===================== -->
 <div id="quizScreen">
   <p id="progress"></p>
+
   <div id="question"></div>
+
   <div class="choices">
     <button id="btn0" onclick="selectChoice(0)"></button>
     <button id="btn1" onclick="selectChoice(1)"></button>
     <button id="btn2" onclick="selectChoice(2)"></button>
   </div>
+
+  <!-- 確認ボタン（モーダルなし版） -->
   <button id="confirmBtn" onclick="confirmAnswer()">この答えで決定</button>
+
   <p id="result"></p>
+
   <button id="nextBtn" onclick="nextQuiz()">次へ</button>
 </div>
 
-<!-- 結果画面 -->
+<!-- =====================
+  結果画面
+===================== -->
 <div id="resultScreen">
   <h2 id="finalScore"></h2>
   <p id="comment"></p>
   <button onclick="retryQuiz()">もう一度遊ぶ</button>
 </div>
 
-<!-- 確認モーダル -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <p>この答えでいいですか？</p>
-    <button onclick="confirmYes()">はい</button>
-    <button onclick="confirmNo()">いいえ</button>
-  </div>
-</div>
-
-<!-- BGM -->
+<!-- =====================
+  BGM
+===================== -->
 <audio id="bgmQuiz" src="bgm_quiz.mp3" loop></audio>
 <audio id="bgmResult" src="bgm_result.mp3" loop></audio>
 
-<!-- 効果音 -->
+<!-- =====================
+  効果音
+===================== -->
 <audio id="se-correct" src="correct.mp3"></audio>
 <audio id="se-wrong" src="wrong.mp3"></audio>
 

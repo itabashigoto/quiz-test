@@ -1,31 +1,11 @@
+/* =================================================
+   基本設定
+================================================= */
 body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
-}
-
-/* ===== タイトル画面 ===== */
-#titleScreen {
-  height: 100vh;
-  background-image: url("bg.png");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.title-content {
-  background: rgba(0,0,0,0.5);
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  color: white;
-}
-
-.title-content h1 {
-  margin-bottom: 20px;
 }
 
 button {
@@ -36,29 +16,135 @@ button {
   cursor: pointer;
 }
 
+/* =================================================
+   タイトル画面
+================================================= */
+#titleScreen {
+  position: relative;
+  height: 100vh;
+  background-image: url("bg.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* タイトルPNG */
+.title-image {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  max-width: 95%;
+  height: auto;
+  z-index: 10;
+}
+
+/* タイトル画面UI（スタート・音量） */
+.title-ui {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  text-align: center;
+}
+
+
+/* =================================================
+   ★ 点滅アニメーション
+================================================= */
+@keyframes blink {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* スタートボタンを点滅 */
+.start-btn {
+  animation: blink 1.2s infinite;
+}
+
+/* =================================================
+   音量コントロール
+================================================= */
 .volume-control {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+.volume-control label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  color: white;
+}
+
+.volume-control label span {
+  min-width: 40px;
+  text-align: left;
+}
+
+.volume-control input[type="range"] {
+  flex: 1;
+}
+
+/* =================================================
+   フェード演出
+================================================= */
 .fade-out {
   animation: fadeOut 0.8s ease forwards;
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
 
 .fade-in {
   animation: fadeIn 0.8s ease forwards;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
-/* ===== クイズ画面 ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =================================================
+   キャラクター画面
+================================================= */
+#charScreen {
+  display: none;
+  height: 100vh;
+  background: white;
+  justify-content: center;
+  align-items: center;
+}
+
+#charScreen img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* =================================================
+   クイズ画面
+================================================= */
+#quizScreen {
+  display: none;
+  min-height: 100vh;
+  background-image: url("bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-top: 40px;
+}
+
 .choices {
   display: flex;
   flex-direction: column;
@@ -74,46 +160,28 @@ button {
   padding-left: 20px;
 }
 
-.correct {
-  background-color: #4CAF50;
-  color: white;
-}
+.correct  { background-color: #4CAF50; color: white; }
+.wrong    { background-color: #f44336; color: white; }
+.selected { background-color: #ff9800; color: white; }
 
-.wrong {
-  background-color: #f44336;
-  color: white;
-}
+/* =================================================
+   レスポンシブ対応
+================================================= */
+@media (max-width: 600px) {
+  .title-image {
+    width: 500px;
+  }
 
-.selected {
-  background-color: #ff9800;
-  color: white;
-}
+  .title-ui {
+    top: 60%;
+  }
 
-/* モーダル */
-.modal {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
-}
+  button {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
 
-.modal-content {
-  background:white;
-  padding:24px;
-  border-radius:12px;
-  text-align:center;
-  width:80%;
-  max-width:300px;
-}
-
-/* スマホ対応 */
-@media (max-width: 600px){
-  .title-content { width:90%; padding:20px; }
-  button { font-size:16px; padding:12px 20px; }
-  .choices button { max-width:90%; }
-  #question, #comment { word-wrap: break-word; padding: 0 10px; }
+  .choices button {
+    max-width: 90%;
+  }
 }
