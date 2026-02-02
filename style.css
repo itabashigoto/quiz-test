@@ -50,6 +50,15 @@ button {
   text-align: center;
 }
 
+/* iPad用 */
+@media (min-width: 601px) and (max-width: 1024px) {
+  #titleScreen,
+  #quizScreen {
+    background-position: center top;
+    /* or center bottom / left center / right center */
+  }
+}
+
 
 /* =================================================
    ★ 点滅アニメーション
