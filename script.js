@@ -162,3 +162,4 @@ function retryQuiz(){
   quizScreen.style.display="none"; resultScreen.style.display="none";
   resetUI();
 }
+
